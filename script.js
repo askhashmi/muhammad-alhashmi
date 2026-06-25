@@ -99,8 +99,17 @@
     var submitLabel = submitBtn ? submitBtn.querySelector('.lf-label') : null;
     var serviceSel = document.getElementById('lf-service');
     var lastFocused = null;
+    var hasOpened = false;
+
+    // Show automatically once per visitor
+    var SEEN_KEY = 'mah-enquiry-seen';
+    function markSeen() { try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) {} }
+    var alreadySeen = false;
+    try { alreadySeen = localStorage.getItem(SEEN_KEY) === '1'; } catch (e) {}
 
     function openModal(presetService) {
+      hasOpened = true;
+      markSeen();
       lastFocused = document.activeElement;
       overlay.classList.add('open');
       overlay.setAttribute('aria-hidden', 'false');
@@ -136,6 +145,13 @@
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
     });
+
+    // First-visit auto-open: once per visitor, after a short, unobtrusive delay
+    if (!alreadySeen) {
+      setTimeout(function () {
+        if (!hasOpened) openModal();
+      }, 7000);
+    }
 
     // Submit
     if (form) {
