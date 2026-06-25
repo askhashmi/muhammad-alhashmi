@@ -33,14 +33,10 @@
     });
   });
 
-  // Initial language: stored preference, else browser hint, else English
-  var initial = 'en';
-  try {
-    var stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) initial = stored;
-    else if ((navigator.language || '').toLowerCase().indexOf('ar') === 0) initial = 'ar';
-  } catch (e) {}
-  setLanguage(initial);
+  // English-only for now. Arabic content remains in the markup (hidden) and the
+  // toggle is hidden via CSS, so it can be re-enabled later by restoring the
+  // stored/browser-preference logic below.
+  setLanguage('en');
 
   /* ---------- Header scroll state ---------- */
   var header = document.getElementById('header');
@@ -84,5 +80,116 @@
   if (yearEl) {
     var y = new Date().getFullYear();
     if (y && !isNaN(y)) yearEl.textContent = y;
+  }
+
+  /* =========================================================
+     ADVISORY ENQUIRY MODAL + FORM
+     ========================================================= */
+
+  // Formspree endpoint — created at https://formspree.io
+  var FORM_ENDPOINT = 'https://formspree.io/f/REPLACE_WITH_FORM_ID';
+
+  var overlay = document.getElementById('leadModal');
+  if (overlay) {
+    var modalClose = document.getElementById('modalClose');
+    var form = document.getElementById('leadForm');
+    var successBox = document.getElementById('leadSuccess');
+    var statusEl = document.getElementById('lfStatus');
+    var submitBtn = document.getElementById('lfSubmit');
+    var submitLabel = submitBtn ? submitBtn.querySelector('.lf-label') : null;
+    var serviceSel = document.getElementById('lf-service');
+    var lastFocused = null;
+
+    function openModal(presetService) {
+      lastFocused = document.activeElement;
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      if (presetService && serviceSel) {
+        for (var i = 0; i < serviceSel.options.length; i++) {
+          if (serviceSel.options[i].value === presetService || serviceSel.options[i].text === presetService) {
+            serviceSel.selectedIndex = i; break;
+          }
+        }
+      }
+      var firstField = document.getElementById('lf-name');
+      if (firstField) setTimeout(function () { firstField.focus(); }, 120);
+    }
+    function closeModal() {
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      if (lastFocused && lastFocused.focus) lastFocused.focus();
+    }
+
+    // Open triggers
+    document.querySelectorAll('[data-modal-open]').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        openModal(btn.getAttribute('data-service'));
+      });
+    });
+    if (modalClose) modalClose.addEventListener('click', closeModal);
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) closeModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+    });
+
+    // Submit
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        statusEl.textContent = '';
+        statusEl.classList.remove('err');
+
+        // Basic validation
+        var valid = true;
+        ['lf-name', 'lf-email', 'lf-phone', 'lf-service'].forEach(function (id) {
+          var el = document.getElementById(id);
+          var wrap = el.closest('.field');
+          if (!el.value || (el.type === 'email' && el.validity && !el.validity.valid)) {
+            valid = false; if (wrap) wrap.classList.add('error');
+          } else if (wrap) { wrap.classList.remove('error'); }
+        });
+        if (!valid) {
+          statusEl.textContent = 'Please complete the required fields.';
+          statusEl.classList.add('err');
+          return;
+        }
+
+        if (FORM_ENDPOINT.indexOf('REPLACE_WITH_FORM_ID') !== -1) {
+          statusEl.textContent = 'Form is not connected yet. Please email me@askhashmi.com.';
+          statusEl.classList.add('err');
+          return;
+        }
+
+        submitBtn.setAttribute('disabled', 'true');
+        if (submitLabel) submitLabel.textContent = 'Sending…';
+
+        var data = new FormData(form);
+        fetch(FORM_ENDPOINT, {
+          method: 'POST',
+          body: data,
+          headers: { 'Accept': 'application/json' }
+        }).then(function (res) {
+          if (res.ok) {
+            form.hidden = true;
+            if (successBox) successBox.hidden = false;
+          } else {
+            return res.json().then(function (d) {
+              throw new Error((d && d.errors && d.errors[0] && d.errors[0].message) || 'Submission failed');
+            });
+          }
+        }).catch(function () {
+          statusEl.textContent = 'Something went wrong. Please try again or email me@askhashmi.com.';
+          statusEl.classList.add('err');
+        }).then(function () {
+          submitBtn.removeAttribute('disabled');
+          if (submitLabel) submitLabel.textContent = 'Send request';
+        });
+      });
+    }
   }
 })();

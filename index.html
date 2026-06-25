@@ -52,11 +52,11 @@
         <span class="ar">أعمل مستشارًا للقادة والجهات الحكومية والمؤسسات في بناء الأنظمة والحوكمة والقدرات التي تحوّل الابتكار من نشاطٍ متفرّق إلى نتائج مؤسسية قابلة للقياس.</span>
       </p>
       <div class="hero-cta reveal">
-        <a href="#contact" class="btn btn-primary">
+        <button type="button" data-modal-open class="btn btn-primary">
           <span class="en">Request an advisory conversation</span>
           <span class="ar">اطلب جلسة استشارية</span>
           <svg class="arr" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+        </button>
         <a href="#perspective" class="btn btn-ghost">
           <span class="en">Read the perspective</span>
           <span class="ar">اقرأ الرؤية</span>
@@ -536,11 +536,11 @@
     <h2 class="reveal"><span class="en">If you are building something that has to last, let's talk</span><span class="ar">إن كنت تبني شيئًا يُراد له أن يدوم، فلنتحدّث</span></h2>
     <p class="lead reveal"><span class="en">A first conversation is unhurried and confidential — a chance to understand the decision in front of you and whether I'm the right person to help with it.</span><span class="ar">الحديث الأول غير مستعجلٍ وسرّيّ — فرصةٌ لفهم القرار الماثل أمامك، وما إذا كنتُ الشخص المناسب للمساعدة فيه.</span></p>
     <div class="cta-actions reveal">
-      <a href="mailto:me@askhashmi.com" class="btn btn-primary">
+      <button type="button" data-modal-open class="btn btn-primary">
         <span class="en">Request an advisory conversation</span><span class="ar">اطلب جلسة استشارية</span>
         <svg class="arr" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a href="#speaking" class="btn btn-ghost"><span class="en">Invite Muhammad to speak</span><span class="ar">ادعُه للحديث</span></a>
+      </button>
+      <button type="button" data-modal-open data-service="Speaking &amp; Keynotes" class="btn btn-ghost"><span class="en">Invite Muhammad to speak</span><span class="ar">ادعُه للحديث</span></button>
     </div>
     <div class="cta-mini reveal">
       <div class="cm"><span><span class="en">Email</span><span class="ar">البريد</span></span><a href="mailto:me@askhashmi.com">me@askhashmi.com</a></div>
@@ -569,7 +569,7 @@
       <div class="footer-col">
         <h4><span class="en">Engage</span><span class="ar">تواصل</span></h4>
         <ul>
-          <li><a href="mailto:me@askhashmi.com"><span class="en">Advisory enquiry</span><span class="ar">طلب استشارة</span></a></li>
+          <li><a href="#" data-modal-open><span class="en">Advisory enquiry</span><span class="ar">طلب استشارة</span></a></li>
           <li><a href="#speaking"><span class="en">Speaking invitations</span><span class="ar">دعوات المحاضرات</span></a></li>
           <li><a href="#contact"><span class="en">Executive mentorship</span><span class="ar">الإرشاد التنفيذي</span></a></li>
         </ul>
@@ -584,6 +584,61 @@
     </div>
   </div>
 </footer>
+
+<!-- ===================== ADVISORY ENQUIRY MODAL ===================== -->
+<div class="modal-overlay" id="leadModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="leadTitle">
+    <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+    <div class="modal-inner">
+      <span class="eyebrow">Private enquiry</span>
+      <h3 id="leadTitle">Request an advisory conversation</h3>
+      <p class="modal-sub">Share a few details and Muhammad will reach out to you personally. All enquiries are treated as confidential.</p>
+      <form id="leadForm" class="lead-form" novalidate>
+        <div class="field">
+          <label for="lf-name">Full name</label>
+          <input id="lf-name" name="name" type="text" required autocomplete="name" placeholder="Your full name">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="lf-email">Email</label>
+            <input id="lf-email" name="email" type="email" required autocomplete="email" placeholder="you@organization.com">
+          </div>
+          <div class="field">
+            <label for="lf-phone">Phone</label>
+            <input id="lf-phone" name="phone" type="tel" required autocomplete="tel" placeholder="+966 5X XXX XXXX">
+          </div>
+        </div>
+        <div class="field">
+          <label for="lf-service">Service / request</label>
+          <select id="lf-service" name="service" required>
+            <option value="" disabled selected>Select an area…</option>
+            <option>Innovation Strategy &amp; Operating Model</option>
+            <option>Board &amp; Executive Counsel</option>
+            <option>Organizational Transformation</option>
+            <option>Business Development &amp; New Ventures</option>
+            <option>Executive Mentorship</option>
+            <option>Speaking &amp; Keynotes</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="lf-message">Details <span class="opt">— optional</span></label>
+          <textarea id="lf-message" name="message" rows="3" placeholder="A few lines about what you are working on"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary lf-submit" id="lfSubmit">
+          <span class="lf-label">Send request</span>
+          <svg class="arr" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <p class="lf-status" id="lfStatus" role="status" aria-live="polite"></p>
+      </form>
+      <div class="lead-success" id="leadSuccess" hidden>
+        <div class="ls-check" aria-hidden="true">✓</div>
+        <h3>Thank you — your request has been received</h3>
+        <p>Muhammad will be in touch personally. For anything urgent, email <a href="mailto:me@askhashmi.com">me@askhashmi.com</a>.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>

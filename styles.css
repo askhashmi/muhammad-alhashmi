@@ -530,6 +530,127 @@ body.lang-ar .footer-col h4 { font-family: var(--ar-display); }
 .social a { color: var(--muted-on-dark); transition: color 0.3s; }
 .social a:hover { color: var(--orange); }
 
+/* =========================================================
+   ENGLISH-ONLY (language toggle hidden for now)
+   ========================================================= */
+.lang-toggle { display: none !important; }
+
+/* =========================================================
+   ADVISORY ENQUIRY MODAL + FORM
+   ========================================================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(7, 32, 28, 0.62);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s var(--ease), visibility 0.35s var(--ease);
+}
+.modal-overlay.open { opacity: 1; visibility: visible; }
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  max-height: 92vh;
+  overflow-y: auto;
+  background: var(--paper);
+  border-radius: 6px;
+  box-shadow: 0 40px 90px -30px rgba(7, 32, 28, 0.6);
+  transform: translateY(24px) scale(0.98);
+  transition: transform 0.4s var(--ease);
+}
+.modal-overlay.open .modal { transform: none; }
+.modal-inner { padding: clamp(28px, 4vw, 48px); }
+.modal .eyebrow { margin-bottom: 16px; }
+.modal h3 { font-size: clamp(24px, 3vw, 32px); margin-bottom: 12px; }
+.modal-sub { color: var(--muted-on-light); font-size: 15.5px; margin-bottom: 28px; }
+
+.modal-close {
+  position: absolute;
+  top: 16px; inset-inline-end: 16px;
+  width: 40px; height: 40px;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--ink);
+  border-radius: 50%;
+  transition: background 0.3s, color 0.3s;
+  z-index: 2;
+}
+.modal-close:hover { background: var(--orange); color: var(--white); }
+
+/* Form */
+.lead-form { display: grid; gap: 18px; }
+.field { display: grid; gap: 7px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.lead-form label {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.lead-form label .opt { color: var(--muted-on-light); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.lead-form input,
+.lead-form select,
+.lead-form textarea {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 15.5px;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 13px 15px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+body.lang-ar .lead-form input,
+body.lang-ar .lead-form select,
+body.lang-ar .lead-form textarea { font-family: var(--ar-body); }
+.lead-form textarea { resize: vertical; min-height: 70px; }
+.lead-form input:focus,
+.lead-form select:focus,
+.lead-form textarea:focus {
+  outline: none;
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(194, 100, 30, 0.14);
+}
+.lead-form input::placeholder,
+.lead-form textarea::placeholder { color: rgba(7,32,28,0.38); }
+.lead-form input:invalid:not(:placeholder-shown),
+.lead-form select:invalid:not([value=""]) { }
+.lead-form .field.error input,
+.lead-form .field.error select { border-color: #c0392b; box-shadow: 0 0 0 3px rgba(192,57,43,0.12); }
+
+.lf-submit { width: 100%; justify-content: center; margin-top: 6px; }
+.lf-submit[disabled] { opacity: 0.6; pointer-events: none; }
+.lf-status { font-size: 14px; text-align: center; min-height: 1px; }
+.lf-status.err { color: #c0392b; }
+
+.lead-success { text-align: center; padding: 12px 0 8px; }
+.lead-success .ls-check {
+  width: 64px; height: 64px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  background: var(--orange);
+  color: var(--white);
+  font-size: 32px;
+  display: flex; align-items: center; justify-content: center;
+}
+.lead-success h3 { font-size: 24px; margin-bottom: 10px; }
+.lead-success p { color: var(--muted-on-light); font-size: 15.5px; }
+.lead-success a { color: var(--orange); }
+
+@media (max-width: 520px) {
+  .field-row { grid-template-columns: 1fr; }
+}
+
 /* ---------- Reveal animation ---------- */
 .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
 .reveal.in { opacity: 1; transform: none; }
